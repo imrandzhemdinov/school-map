@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта школы МБОУ СОШ №42</title>
+    <style>
+        :root {
+            --primary: #1a5f7a;
+            --accent: #ffd700;
+            --bg: #f4f7f6;
+        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; }
+        header { width: 100%; background: var(--primary); color: white; padding: 30px 0; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .container { max-width: 1000px; width: 90%; margin: 30px auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .map-box { position: relative; border: 2px solid #eee; border-radius: 10px; overflow: hidden; line-height: 0; }
+        .map-img { width: 100%; height: auto; }
+        
+        /* Интерактивные зоны */
+        .area {
+            position: absolute;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .area:hover {
+            background: rgba(255, 215, 0, 0.4);
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .info-card {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef2f3;
+            border-radius: 8px;
+            display: none;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .footer { margin: 40px 0; color: #888; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Карта школы МБОУ СОШ №42</h1>
+    <p>Электронный навигатор по зданию</p>
+</header>
+
+<div class="container">
+    <div class="map-box">
+        <img src="map.jpg" alt="План школы" class="map-img">
+        
+        <!-- Примеры интерактивных зон (координаты в %) -->
+        <div class="area" style="top: 23%; left: 10%; width: 7%; height: 19%;" onclick="showRoom('Кабинет 101 (Начальные классы)')"></div>
+        <div class="area" style="top: 23%; left: 17%; width: 7%; height: 19%;" onclick="showRoom('Кабинет 102')"></div>
+        <div class="area" style="top: 23%; left: 33%; width: 9%; height: 19%;" onclick="showRoom('Кабинет 104 (Математика)')"></div>
+        <div class="area" style="top: 48%; left: 45%; width: 11%; height: 19%;" onclick="showRoom('Школьная столовая')"></div>
+        <div class="area" style="top: 19%; left: 66%; width: 7%; height: 25%;" onclick="showRoom('Лестница на 2 этаж')"></div>
+    </div>
+
+    <div id="room-info" class="info-card">
+        <strong id="room-title"></strong>
+        <p id="room-desc">Выберите помещение на карте для просмотра деталей.</p>
+    </div>
+</div>
+
+<div class="footer">
+    МБОУ СОШ №42 им. Эшрефа Шемьи-заде
+</div>
+
+<script>
+    function showRoom(name) {
+        const card = document.getElementById('room-info');
+        const title = document.getElementById('room-title');
+        card.style.display = 'block';
+        title.innerText = name;
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+
+</body>
+</html>
