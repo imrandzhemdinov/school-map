@@ -3,83 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Карта школы МБОУ СОШ №42</title>
+    <title>Навигатор МБОУ СОШ №42</title>
     <style>
         :root {
-            --primary: #1a5f7a;
-            --accent: #ffd700;
-            --bg: #f4f7f6;
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f8f9fa;
+            --text: #333;
         }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; }
-        header { width: 100%; background: var(--primary); color: white; padding: 30px 0; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .container { max-width: 1000px; width: 90%; margin: 30px auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .map-box { position: relative; border: 2px solid #eee; border-radius: 10px; overflow: hidden; line-height: 0; }
-        .map-img { width: 100%; height: auto; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
         
-        /* Интерактивные зоны */
-        .area {
-            position: absolute;
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .area:hover {
-            background: rgba(255, 215, 0, 0.4);
-            border: 1px solid var(--accent);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-        }
+        /* Шапка */
+        header { background: var(--primary); color: white; padding: 25px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        header h1 { margin: 0; font-size: 24px; letter-spacing: 1px; }
+        header p { margin: 5px 0 0; opacity: 0.8; font-size: 14px; }
 
-        .info-card {
-            margin-top: 20px;
-            padding: 15px;
-            background: #eef2f3;
-            border-radius: 8px;
-            display: none;
-            border-left: 5px solid var(--primary);
-        }
+        .main-content { display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 20px; max-width: 1400px; margin: 0 auto; }
+
+        /* Карточка с картой */
+        .map-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.05); text-align: center; }
+        .map-card h2 { margin-bottom: 20px; color: var(--primary); border-left: 5px solid var(--accent); padding-left: 15px; text-align: left; }
+        .map-container { position: relative; border-radius: 10px; overflow: hidden; border: 1px solid #eee; }
+        .map-container img { width: 100%; height: auto; display: block; transition: transform 0.3s; }
+        .map-container img:hover { transform: scale(1.02); }
+
+        /* Боковая панель */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .widget { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.05); }
+        .widget h3 { margin: 0 0 15px; font-size: 18px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
         
-        .footer { margin: 40px 0; color: #888; font-size: 0.9em; }
+        /* Поиск */
+        .search-box { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        .search-box:focus { border-color: var(--accent); }
+
+        /* Список локаций */
+        .location-list { list-style: none; padding: 0; margin: 0; }
+        .location-list li { padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
+        .location-list li:hover { background: #f0f7ff; color: var(--accent); }
+        .floor-badge { font-size: 11px; background: #eee; padding: 3px 8px; border-radius: 12px; color: #666; }
+
+        /* Расписание */
+        .schedule-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px dashed #eee; }
+
+        @media (max-width: 900px) {
+            .main-content { grid-template-columns: 1fr; }
+            header h1 { font-size: 20px; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Карта школы МБОУ СОШ №42</h1>
-    <p>Электронный навигатор по зданию</p>
+    <h1>ЦИФРОВОЙ НАВИГАТОР СОШ №42</h1>
+    <p>Электронная карта и справочник помещений</p>
 </header>
 
-<div class="container">
-    <div class="map-box">
-        <img src="map.jpg" alt="План школы" class="map-img">
-        
-        <!-- Примеры интерактивных зон (координаты в %) -->
-        <div class="area" style="top: 23%; left: 10%; width: 7%; height: 19%;" onclick="showRoom('Кабинет 101 (Начальные классы)')"></div>
-        <div class="area" style="top: 23%; left: 17%; width: 7%; height: 19%;" onclick="showRoom('Кабинет 102')"></div>
-        <div class="area" style="top: 23%; left: 33%; width: 9%; height: 19%;" onclick="showRoom('Кабинет 104 (Математика)')"></div>
-        <div class="area" style="top: 48%; left: 45%; width: 11%; height: 19%;" onclick="showRoom('Школьная столовая')"></div>
-        <div class="area" style="top: 19%; left: 66%; width: 7%; height: 25%;" onclick="showRoom('Лестница на 2 этаж')"></div>
+<main class="main-content">
+    <!-- Левая часть: Карта -->
+    <div class="map-card">
+        <h2>Схема первого этажа</h2>
+        <div class="map-container">
+            <img src="map.jpg" alt="Карта школы">
+        </div>
+        <p style="margin-top: 15px; color: #7f8c8d; font-size: 13px;">Используйте жест "щепок" для масштабирования на мобильных устройствах</p>
     </div>
 
-    <div id="room-info" class="info-card">
-        <strong id="room-title"></strong>
-        <p id="room-desc">Выберите помещение на карте для просмотра деталей.</p>
+    <!-- Правая часть: Инфо -->
+    <div class="sidebar">
+        <div class="widget">
+            <h3>🔍 Поиск кабинета</h3>
+            <input type="text" class="search-box" placeholder="Введите номер или название...">
+        </div>
+
+        <div class="widget">
+            <h3>📍 Быстрая навигация</h3>
+            <ul class="location-list">
+                <li><span>Директор</span> <span class="floor-badge">1 этаж</span></li>
+                <li><span>Столовая</span> <span class="floor-badge">1 этаж</span></li>
+                <li><span>Медпункт</span> <span class="floor-badge">1 этаж</span></li>
+                <li><span>Библиотека</span> <span class="floor-badge">2 этаж</span></li>
+                <li><span>Спортзал</span> <span class="floor-badge">1 этаж</span></li>
+            </ul>
+        </div>
+
+        <div class="widget">
+            <h3>⏰ Расписание звонков</h3>
+            <div class="schedule-row"><b>1 урок:</b> <span>08:30 — 09:15</span></div>
+            <div class="schedule-row"><b>2 урок:</b> <span>09:30 — 10:15</span></div>
+            <div class="schedule-row"><b>3 урок:</b> <span>10:35 — 11:20</span></div>
+            <div class="schedule-row"><b>4 урок:</b> <span>11:40 — 12:25</span></div>
+            <div style="margin-top: 10px; text-align: center; font-size: 12px; color: var(--accent);">Перемена 20 минут</div>
+        </div>
     </div>
-</div>
+</main>
 
-<div class="footer">
-    МБОУ СОШ №42 им. Эшрефа Шемьи-заде
-</div>
-
-<script>
-    function showRoom(name) {
-        const card = document.getElementById('room-info');
-        const title = document.getElementById('room-title');
-        card.style.display = 'block';
-        title.innerText = name;
-        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-</script>
+<footer style="text-align: center; padding: 30px; color: #95a5a6; font-size: 13px;">
+    Разработано для МБОУ СОШ №42 им. Эшрефа Шемьи-заде &bull; 2026
+</footer>
 
 </body>
 </html>
